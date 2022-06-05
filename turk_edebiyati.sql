@@ -72,9 +72,10 @@ VALUES (1, "Harname", "","", "","", "", 1),
     (58, "Tutunamayanlar", "","", "","", "", 5),
     (59, "Yeni Yalan Zamanlar", "","", "","", "", 5),
     (60, "Anayurt Oteli", "","", "","", "", 5)
-    
-    
     ;
+-- update 
+insert into book (book_id, book_name, description, summary, image, kind_genre, language, period_id)
+VALUES(61, "Nirvana", "", "", "", "Tiyatro", "", 6);
 -- BOOK_AUTHOR
 insert into author_book(book_id, author_id)
 VALUES (1,1), (2,1), (3,2), (4,3),(5,4),(6,4),(7,4),(8,5),(9,6),(10,6),(11,6),(12,6),(13,7),(14,7),(15,8),
@@ -82,6 +83,9 @@ VALUES (1,1), (2,1), (3,2), (4,3),(5,4),(6,4),(7,4),(8,5),(9,6),(10,6),(11,6),(1
         (29,16),(30,6),(31,16),(32,16),(33,17),(34,17),(35,17),(36,17),(37,17),(38,17), (39,18),(40,19),
         (41,20), (42,20), (43,20), (44,20), (45,20), (46,20),(47,21),(48,21),(49,21), (50,22),(51,22),(52,22),(53,22),
         (54,23),(55,24),(56,25),(57,25),(58,26), (59,27), (60,28);
+-- update
+insert into author_book(book_id, author_id)
+VALUES (61, 20);
 -- PERİOD
 insert into period (period_id, period_name, description)
 VALUES (1, "Divan Edb.", ""),
@@ -89,8 +93,21 @@ VALUES (1, "Divan Edb.", ""),
 (3, "Servet-i Fünun Edb.", ""),
 (4, "Milli Edb.", ""),
 (5, "Cumhuriyet Edb.", "");
--- SAVEDBOOKS
+-- updates:
+insert into period (period_id, period_name, description)
+VALUES (6, "Fecri Ati Edb.", "");
 
+-- SAVEDBOOKS
+insert into user_book (book_id, user_id, date, points, comment)
+VALUES(3,2, NULL, 5, "mukemmel"),
+(27,2, NULL, 2, "uzun"),
+(60,2, NULL, 4, "guzel"),
+(2,2, NULL, 1, "basarisiz"),
+(28,2, NULL, 2, "eh");
+-- updates with date value:
+insert into user_book (book_id, user_id, date, points, comment)
+VALUES(5,3, now(), 3, "ok"),
+(50,1, now(), 3, "ok");
 -- USER
 insert into user (user_id, user_name)
 VALUES (1, "idemir"), (2, "aozaslan"), (3, "oserifogullari");

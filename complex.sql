@@ -27,6 +27,7 @@ group by a.author_id
 having COUNT(DISTINCT(p.period_id)) >1;
 
 -- 3) users with highest overall activity ordering in order
+-- can give limit function to limit number of records that will be shown
 select u.user_name, COUNT(book_id) as book_count 
 from user_book ub
 join user u on u.user_id = ub.user_id
@@ -34,6 +35,7 @@ group by ub.user_id
 order by book_count DESC; 
 
 -- 4) users with highest activity is in the last 3 month in order
+-- can give limit function to limit number of records that will be shown
 select u.user_name, COUNT(book_id) as book_count 
 from (select * 
 from user_book
@@ -43,6 +45,7 @@ group by ub.user_id
 order by book_count DESC; 
 
 -- 5) most saved books in order 
+-- can give limit function to limit number of records that will be shown
 select b.book_id, b.book_name, p.period_name, count(*) as book_saved_count
 from savedBooks sb
 join book_savedBooks bsb on sb.savedbooks_id = bsb.savedbooks_id

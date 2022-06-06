@@ -1,9 +1,17 @@
 -- AUTHOR
 insert into author (author_id, author_name, information)
 VALUES 
-(1, "Şeyhi", ""),(2, "Ali Şair Nevai", ""),(3, "Şeyh Galip", ""),(4, "Nabi", ""),
-(5, "Yunus Emre", ""),(6, "Fuzuli", ""),(7, "Baki", ""),(8, "Nedim", ""),
-(9, "Namik Kemal", ""),(10, "Recaizade Mahmut Ekrem", ""),(11, "Semipaşazade Sezai", ""),(12, "Nabizade Nazim", ""),
+(1, "Şeyhi", "Şeyhî (ö. 1431), Kütahya doğumlu 15. asır Türk divan şairi ve tabip. Kendinden sonra gelen birçok şairi etkilemiş bir şairdir. Harnâme adlı hiciv mesnevisi ve Fars edebiyatının ünlü şairi Nizami'nin aynı adlı eserinden Türkçeleştirdiği Hüsrev ü Şîrîn adlı aşk mesnevisi en ünlü eserleridir.", "https://1000kitap.com/yazar/seyhi"),
+(2, "Ali Şair Nevai", "'Ali-Shir Nava'i, also known as Nizām-al-Din ʿAli-Shir Herawī was a poet, writer, politician, linguist, Hanafi Maturidi mystic and painter who was the greatest representative of Chagatai literature.", "https://www.turkedebiyati.org/images/yazarlar_sairler/ali_sir_nevai.jpg"),
+(3, "Şeyh Galip", "Galib Mehmed Esad Dede, known as Sheikh Galib, was a Turkish poet of divan literature, mystic.", "https://lh4.googleusercontent.com/MdXTmfBJvPVeL3JA42OfLpyae8FfZxz_a_aRypOMe-zFMTr9QumY3gF3FSgrjwuxGjYhVp1rX2b2pIEoCDQqY3ENdqihPBOPm0aFHii1ITee8VP01Nz21Nxp6bg978hOaBIRFg4o"),
+(4, "Nabi", "Yusuf Nabi was a Turkish Divan poet of Kurdish descent, in the court of Mehmet IV. He was famous for \"his brilliant lyrics filled with popular sayings and critiques of the age and verses commemorating innumerable important occasions.\" At the age of 24 Nabi left Şanlıurfa Province and came to Istanbul to study.", "https://www.mortakasanat.com/wp-content/uploads/2020/09/image003-18.jpg"),
+(5, "Yunus Emre", "Yunus Emre also known as Derviş Yunus was a Turkish folk poet and Islamic Sufi mystic who greatly influenced Turkish culture. His name, Yunus, is the Muslim equivalent to the English name Jonah. He wrote in Old Anatolian Turkish, an early stage of Turkish.", "https://pbs.twimg.com/profile_images/1208401611/Yunus_Emre_400x400.jpg"),
+(6, "Fuzuli", "Mahammad bin Suleyman, better known by his pen name Fuzuli, was a 16th century poet, writer and thinker, who wrote in his native Azerbaijani, as well as Arabic and Persian languages.", "https://img.antoloji.com/media/sair_resimleri/00/1100_b_7018.jpg"),
+(7, "Baki", "Bâḳî was the pen name of the Ottoman Turkish poet Mahmud Abdülbâkî. Considered one of the greatest contributors to Turkish literature and Azerbaijani literature. Bâkî came to be known as Sultânüş-şuarâ, or \"Sultan of poets\". ", "https://admin.biyografya.com/_docs/photos/5c7c1769660f707699d57066fc28a5e7.jpg"),
+(8, "Nedim", "Ahmed Nedîm Efendi was the pen name of one of the most celebrated Ottoman poets. He achieved his greatest fame during the reign of Ahmed III, the so-called Tulip Era from 1718 to 1730.", "https://upload.wikimedia.org/wikipedia/commons/c/c4/Nedim_%28divan_edb.%C5%9Fairi%29.JPG"),
+(9, "Namik Kemal", "Namık Kemal (21 December 1840 – 2 December 1888) was an Ottoman democrat, writer, intellectual, reformer, journalist, playwright, and political activist who was influential in the formation of the Young Ottomans and their struggle for governmental reform in the Ottoman Empire during the late Tanzimat period, which would lead to the First Constitutional Era in the Empire in 1876.", "https://uskudar.edu.tr/assets/uploads/bilimadami/66/namik-kemal.jpg"),
+(10, "Recaizade Mahmut Ekrem", ""),
+(11, "Semipaşazade Sezai", ""),(12, "Nabizade Nazim", ""),
 (13, "Şemşettin Sami", ""),(14, "Ahmet Mithat Efendi", ""),(15, "Şinasi", ""),(16, "Halit Ziya Uşakligil", ""),
 (17, "Hüseyin Rahmi Gürpinar", ""),(18, "Mehmet Rauf", ""),(19, "Hüseyin Cahit Yalçin", ""),(20, "Yakup Kadri Karaosmanoğlu", ""),
 (21, "Halide Edip Adivar", ""),(22, "Reşat Nuri Gültekin", ""),(23, "Ömer Seyfettin", ""),
@@ -12,9 +20,9 @@ VALUES
 
 -- BOOK
 insert into book (book_id, book_name, description, summary, image, kind_genre, language, period_id)
-VALUES (1, "Harname", "","", "","", "", 1),
-	(2, "Hüsrev ü Şirin", "","", "","", "", 1),
-    (3, "Mecalisü'n Nefais", "","", "","", "", 1),
+VALUES (1, "Harname", "","", "https://cdn.bkmkitap.com/harname-11542674-49-O.jpg","", "", 1),
+	(2, "Hüsrev ü Şirin", "","", "https://cdn.bkmkitap.com/husrev-ile-sirin-11564351-41-O.jpg","", "", 1),
+    (3, "Mecalisü'n Nefais", "","", "https://i.dr.com.tr/cache/600x600-0/originals/0001695270001-1.jpg","", "", 1),
     (4, "Hüsn ü Aşk", "","", "","", "", 1),
     (5, "Hayriyye", "","", "","", "", 1),
     (6, "Hayrabad", "","", "","", "", 1),

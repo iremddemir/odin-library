@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "the-new-css-reset": "^1.6.1"
+  },
+  "devDependencies": {
+    "node-sass": "^7.0.1"
+  }
+}

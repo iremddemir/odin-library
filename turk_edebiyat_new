@@ -1,5 +1,5 @@
 -- AUTHOR
-insert into author (author_id, author_name, information)
+insert into author (author_id, author_name, information, image_link)
 VALUES 
 (1, "Şeyhi", "Şeyhî (ö. 1431), Kütahya doğumlu 15. asır Türk divan şairi ve tabip. Kendinden sonra gelen birçok şairi etkilemiş bir şairdir. Harnâme adlı hiciv mesnevisi ve Fars edebiyatının ünlü şairi Nizami'nin aynı adlı eserinden Türkçeleştirdiği Hüsrev ü Şîrîn adlı aşk mesnevisi en ünlü eserleridir.", "https://1000kitap.com/yazar/seyhi"),
 (2, "Ali Şair Nevai", "'Ali-Shir Nava'i, also known as Nizām-al-Din ʿAli-Shir Herawī was a poet, writer, politician, linguist, Hanafi Maturidi mystic and painter who was the greatest representative of Chagatai literature.", "https://www.turkedebiyati.org/images/yazarlar_sairler/ali_sir_nevai.jpg"),
@@ -10,21 +10,34 @@ VALUES
 (7, "Baki", "Bâḳî was the pen name of the Ottoman Turkish poet Mahmud Abdülbâkî. Considered one of the greatest contributors to Turkish literature and Azerbaijani literature. Bâkî came to be known as Sultânüş-şuarâ, or \"Sultan of poets\". ", "https://admin.biyografya.com/_docs/photos/5c7c1769660f707699d57066fc28a5e7.jpg"),
 (8, "Nedim", "Ahmed Nedîm Efendi was the pen name of one of the most celebrated Ottoman poets. He achieved his greatest fame during the reign of Ahmed III, the so-called Tulip Era from 1718 to 1730.", "https://upload.wikimedia.org/wikipedia/commons/c/c4/Nedim_%28divan_edb.%C5%9Fairi%29.JPG"),
 (9, "Namik Kemal", "Namık Kemal (21 December 1840 – 2 December 1888) was an Ottoman democrat, writer, intellectual, reformer, journalist, playwright, and political activist who was influential in the formation of the Young Ottomans and their struggle for governmental reform in the Ottoman Empire during the late Tanzimat period, which would lead to the First Constitutional Era in the Empire in 1876.", "https://uskudar.edu.tr/assets/uploads/bilimadami/66/namik-kemal.jpg"),
-(10, "Recaizade Mahmut Ekrem", ""),
-(11, "Semipaşazade Sezai", ""),(12, "Nabizade Nazim", ""),
-(13, "Şemşettin Sami", ""),(14, "Ahmet Mithat Efendi", ""),(15, "Şinasi", ""),(16, "Halit Ziya Uşakligil", ""),
-(17, "Hüseyin Rahmi Gürpinar", ""),(18, "Mehmet Rauf", ""),(19, "Hüseyin Cahit Yalçin", ""),(20, "Yakup Kadri Karaosmanoğlu", ""),
-(21, "Halide Edip Adivar", ""),(22, "Reşat Nuri Gültekin", ""),(23, "Ömer Seyfettin", ""),
-(24, "Haldun Taner", ""),(25, "Ahmet Hamdi Tanpinar", ""),(26, "Oguz Atay", ""),(27, "İnci Aral", ""),(28, "Yusuf Atilgan", "")
+(10, "Recaizade Mahmut Ekrem", "", ""),
+(11, "Semipaşazade Sezai", "", ""),(12, "Nabizade Nazim", "", ""),
+(13, "Şemşettin Sami", "", ""),(14, "Ahmet Mithat Efendi", "", ""),(15, "Şinasi", "", ""),
+(16, "Halit Ziya Uşakligil", "", ""),
+(17, "Hüseyin Rahmi Gürpinar", "", ""),(18, "Mehmet Rauf", "", ""),
+(19, "Hüseyin Cahit Yalçin", "", ""),(20, "Yakup Kadri Karaosmanoğlu", "", ""),
+(21, "Halide Edip Adivar", "", ""),(22, "Reşat Nuri Gültekin", "", ""),(23, "Ömer Seyfettin", "", ""),
+(24, "Haldun Taner", "", ""),(25, "Ahmet Hamdi Tanpinar", "", ""),(26, "Oguz Atay", "", ""),
+(27, "İnci Aral", "", ""),(28, "Yusuf Atilgan", "", "")
 ;
+-- PERİOD
+insert into period (period_id, period_name, description)
+VALUES (1, "Divan Edb.", ""),
+(2, "Tanzimat Edb.", ""),
+(3, "Servet-i Fünun Edb.", ""),
+(4, "Milli Edb.", ""),
+(5, "Cumhuriyet Edb.", "");
+-- updates:
+insert into period (period_id, period_name, description)
+VALUES (6, "Fecri Ati Edb.", "");
 
 -- BOOK
 insert into book (book_id, book_name, description, summary, image, kind_genre, language, period_id)
 VALUES (1, "Harname", "","", "https://cdn.bkmkitap.com/harname-11542674-49-O.jpg","", "", 1),
 	(2, "Hüsrev ü Şirin", "","", "https://cdn.bkmkitap.com/husrev-ile-sirin-11564351-41-O.jpg","", "", 1),
     (3, "Mecalisü'n Nefais", "","", "https://i.dr.com.tr/cache/600x600-0/originals/0001695270001-1.jpg","", "", 1),
-    (4, "Hüsn ü Aşk", "","", "","", "", 1),
-    (5, "Hayriyye", "","", "","", "", 1),
+    (4, "Hüsn ü Aşk", "Hüsn ü Aşk is the magnum opus of Turkish Mevlevî poet Şeyh Galip. Hüsn ü Aşk consists of 2101 verses and is an allegory of major themes in Sufi Islam. Hüsn ü Aşk tells the tale of two lovers, Hüsn and Aşk. According to the story, Hüsn and Aşk were born on the same night to the same clan.","Hüsn ü Aşk is the magnum opus of Turkish Mevlevî poet Şeyh Galip. Hüsn ü Aşk consists of 2101 verses and is an allegory of major themes in Sufi Islam. Hüsn ü Aşk tells the tale of two lovers, Hüsn and Aşk. According to the story, Hüsn and Aşk were born on the same night to the same clan.", "https://img.iskultur.com.tr/2006/05/husn-ask.png","", "", 1),
+    (5, "Hayriyye", "Hayriyye, Divan edebiyatı şairlerinden Nâbi'nin eseridir. Eser aruz ölçüsüyle yazılmış bir öğüt kitabıdır. Nâbi bu eseri oğluna öğüt vermek için yazmıştır.","", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdHhpGiIre0QLkH1GR5HrNG4AF13tS3p0r3tt-n8AQO2BmPNPz3kB_56FfT1uEF9j_04I&usqp=CAU","", "", 1),
     (6, "Hayrabad", "","", "","", "", 1),
     (7, "Sur-name", "","", "","", "", 1),
     (8, "Risaletü'n Nushiyye", "","", "","Halk", "", 1),
@@ -94,17 +107,11 @@ VALUES (1,1), (2,1), (3,2), (4,3),(5,4),(6,4),(7,4),(8,5),(9,6),(10,6),(11,6),(1
 -- update
 insert into author_book(book_id, author_id)
 VALUES (61, 20);
--- PERİOD
-insert into period (period_id, period_name, description)
-VALUES (1, "Divan Edb.", ""),
-(2, "Tanzimat Edb.", ""),
-(3, "Servet-i Fünun Edb.", ""),
-(4, "Milli Edb.", ""),
-(5, "Cumhuriyet Edb.", "");
--- updates:
-insert into period (period_id, period_name, description)
-VALUES (6, "Fecri Ati Edb.", "");
 
+-- USER
+insert into user (user_id, user_name)
+VALUES (1, "idemir"), (2, "aozaslan"), (3, "oserifogullari");
+-- 
 -- SAVEDBOOKS
 insert into user_book (book_id, user_id, date, points, comment)
 VALUES(3,2, NULL, 5, "mukemmel"),
@@ -116,7 +123,3 @@ VALUES(3,2, NULL, 5, "mukemmel"),
 insert into user_book (book_id, user_id, date, points, comment)
 VALUES(5,3, now(), 3, "ok"),
 (50,1, now(), 3, "ok");
--- USER
-insert into user (user_id, user_name)
-VALUES (1, "idemir"), (2, "aozaslan"), (3, "oserifogullari");
--- 

@@ -54,6 +54,17 @@ join period p on p.period_id = b.period_id
 group by bsb.book_id
 order by book_saved_count DESC;
 
+-- 6) most 5 populer authors with highest total points
+
+select a.name, bp.total_points
+from book b 
+join (select book_id, sum(points) as total_points
+from user_book
+group by book_id) bp on bp.book_id = b.book_id
+join author_book ab on ab.book_id = b.book_id
+join author a on a.author_id = ab.author_id
+order by bp.total_points DESC
+limit 5;
 
 
 

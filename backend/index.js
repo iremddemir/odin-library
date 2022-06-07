@@ -58,8 +58,41 @@ app.get("/books", (req, res) => {
 const allBooksWithAuthorsQuery = "";
 
 app.get("/search", (req, res) => {
-  const searchQuery = "SELECT * FROM book WHERE book_name LIKE '%" + req.query.search + "%'";
+  let searchQuery =
+    "SELECT *, book.description  FROM book, author_book, author, period WHERE book.book_id = author_book.book_id AND author.author_id = author_book.author_id AND period.period_id = book.period_id ";
+
+  // Search by
+  const searchIn = req.query.searchIn;
+  console.log(searchIn);
+  if (searchIn === "name") {
+    searchQuery += "AND book.book_name LIKE '%" + req.query.keyword + "%' ";
+  } else if (searchIn === "author") {
+    searchQuery += "AND author.author_name LIKE  '%" + req.query.keyword + "%' ";
+  } else if (searchIn === "description") {
+    searchQuery += "AND book.description LIKE '%" + req.query.keyword + "%' ";
+  } else {
+    searchQuery +=
+      "AND (book.book_name LIKE '%" +
+      req.query.keyword +
+      "%' " +
+      "OR author.author_name LIKE  '%" +
+      req.query.keyword +
+      "%' " +
+      "OR book.description LIKE '%" +
+      req.query.keyword +
+      "%') ";
+  }
+
+  // Sort
+  const sortBy = req.query.sortBy;
+  const sortOrder = req.query.sortOrder;
+
+  if (sortBy !== "none" && sortOrder) {
+    searchQuery += " ORDER BY " + sortBy + " " + sortOrder;
+  }
+
   console.log(searchQuery);
+
   mysql_pool.getConnection(function (err, connection) {
     if (err) {
       console.error("CONNECTION error: ", err);

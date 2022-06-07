@@ -14,11 +14,16 @@ const SearchPage = () => {
   const [search, setSearch] = useState(searchParams.get("s"));
   const [searchResults, setSearchResults] = useState([]);
   const [filters, setFilters] = useState({});
+  const [sort, setSort] = useState({
+    by: "none",
+    order: "asc",
+  });
+  const [searchIn, setSearchIn] = useState("all");
   const [loading, setLoading] = useState(false);
 
   const fetchQuery = async () => {
     setLoading(true);
-    let response = await fetch(`http://localhost:4000/search?search=${search}`);
+    let response = await fetch(`http://localhost:4000/search?keyword=${search}&sortBy=${sort.by}&sortOrder=${sort.order}&searchIn=${searchIn}`);
     response = await response.json();
 
     if (response.error) {
@@ -46,8 +51,8 @@ const SearchPage = () => {
     <div className={styles.searchPage}>
       <Appbar />
       <div className={styles.content}>
-        <Filters filters={filters} setFilters={setFilters} />
-        <SearchSection search={search} setSearch={setSearch} handleSearchSubmit={handleSearchSubmit} />
+        <Filters filters={filters} setFilters={setFilters} sort={sort} setSort={setSort} />
+        <SearchSection search={search} setSearch={setSearch} handleSearchSubmit={handleSearchSubmit} searchIn={searchIn} setSearchIn={setSearchIn} />
         {loading ? "Loading..." : <SearchResults results={searchResults} />}
       </div>
     </div>
@@ -56,21 +61,61 @@ const SearchPage = () => {
 
 export default SearchPage;
 
-const Filters = ({ filters, setFilters }) => {
+const Filters = ({ filters, setFilters, sort, setSort }) => {
+  const [periods, setPeriods] = useState([]);
+  const [kinds, setKinds] = useState([]);
+
+  // Fetch filter options
+  useEffect(() => {
+    const fetchFilters = async () => {
+      // Fetch periods
+      let periodsResponse = await fetch(`http://localhost:4000/periods`);
+      periodsResponse = await periodsResponse.json();
+
+      if (periodsResponse.error) {
+        setPeriods([]);
+        return;
+      }
+
+      setPeriods(periodsResponse.data.map((period) => ({ value: period.period_id, label: period.period_name })));
+
+      // Fetch kinds
+      let kindsResponse = await fetch(`http://localhost:4000/genres`);
+      kindsResponse = await kindsResponse.json();
+
+      if (kindsResponse.error) {
+        setKinds([]);
+        return;
+      }
+
+      setKinds(kindsResponse.data.map((kind) => ({ value: kind.kind_genre, label: kind.kind_genre })));
+    };
+
+    fetchFilters();
+  }, []);
+
+  const handleSortByChange = (e) => {
+    setSort({ by: e.target.value, order: sort.order });
+  };
+
+  const handleSortOrderChange = (e) => {
+    setSort({ by: sort.by, order: e.target.value });
+  };
+
   return (
     <section className={styles.filtersSection}>
       <div className={styles.sort}>
         <label htmlFor="sort">
           <b>Sort</b> by:{" "}
         </label>
-        <select id="sort" onChange={(e) => setFilters({ ...filters, sort: e.target.value })}>
-          <option value="">None</option>
-          <option value="name">Name</option>
+        <select id="sort" onChange={handleSortByChange}>
+          <option value="none">None</option>
+          <option value="book_name">Name</option>
           <option value="author">Author</option>
           <option value="period">Period</option>
         </select>
         <span> in </span>
-        <select id="order" onChange={(e) => setFilters({ ...filters, order: e.target.value })}>
+        <select id="order" onChange={handleSortOrderChange}>
           <option value="asc">Ascending</option>
           <option value="desc">Descending</option>
         </select>
@@ -81,11 +126,7 @@ const Filters = ({ filters, setFilters }) => {
           Filter by period:{" "}
         </label>
         <Multiselect
-          options={[
-            { label: "Name", value: "name" },
-            { label: "Author", value: "author" },
-            { label: "Period", value: "period" },
-          ]}
+          options={periods}
           onSelect={(values) => setFilters({ ...filters, filters: values })}
           displayValue="label"
           placeholder="Select period"
@@ -99,11 +140,7 @@ const Filters = ({ filters, setFilters }) => {
           Filter by kind/genre:{" "}
         </label>
         <Multiselect
-          options={[
-            { label: "Name", value: "name" },
-            { label: "Author", value: "author" },
-            { label: "Period", value: "period" },
-          ]}
+          options={kinds}
           onSelect={(values) => setFilters({ ...filters, filters: values })}
           displayValue="label"
           placeholder="Select kind/genre"
@@ -144,11 +181,15 @@ const Filters = ({ filters, setFilters }) => {
   );
 };
 
-const SearchSection = ({ search, setSearch, handleSearchSubmit }) => {
+const SearchSection = ({ search, setSearch, handleSearchSubmit, searchIn, setSearchIn }) => {
   const [searchType, setSearchType] = useState("exact");
 
   const handleSearchTypeChange = (e) => {
     setSearchType(e.target.value);
+  };
+
+  const handleSearchInChange = (e) => {
+    setSearchIn(e.target.value);
   };
 
   return (
@@ -166,6 +207,21 @@ const SearchSection = ({ search, setSearch, handleSearchSubmit }) => {
               <input type="radio" value="fuzzy" checked={searchType === "fuzzy"} onChange={(e) => handleSearchTypeChange(e)} /> Fuzzy{" "}
             </label>
             Search
+          </div>
+          <div className={styles.searchIn}>
+            Search in:{" "}
+            <label className={styles.searchInLabel}>
+              <input type="radio" value="all" checked={searchIn === "all"} onChange={(e) => handleSearchInChange(e)} /> All /
+            </label>
+            <label className={styles.searchByLabel}>
+              <input type="radio" value="name" checked={searchIn === "name"} onChange={(e) => handleSearchInChange(e)} /> Title /
+            </label>
+            <label className={styles.searchByLabel}>
+              <input type="radio" value="author" checked={searchIn === "author"} onChange={(e) => handleSearchInChange(e)} /> Author /{" "}
+            </label>
+            <label className={styles.searchByLabel}>
+              <input type="radio" value="description" checked={searchIn === "description"} onChange={(e) => handleSearchInChange(e)} /> Description{" "}
+            </label>
           </div>
         </div>
       </div>

@@ -54,6 +54,40 @@ app.get("/books", (req, res) => {
   });
 });
 
+// book query
+const bookQuery =
+  "SELECT *, book.description FROM book, author_book, author, period WHERE book.book_id = author_book.book_id AND author.author_id = author_book.author_id AND book.book_id = ? AND period.period_id = book.period_id";
+app.get("/book/:id", (req, res) => {
+  mysql_pool.getConnection(function (err, connection) {
+    if (err) {
+      console.error("CONNECTION error: ", err);
+      res.statusCode = 503;
+      res.send({
+        result: "error",
+        err: err.code,
+      });
+    } else {
+      connection.query(bookQuery, [req.params.id], function (err, rows) {
+        connection.release();
+        if (err) {
+          console.error(err);
+          res.statusCode = 503;
+          res.send({
+            result: "error",
+            err: err.code,
+          });
+        } else {
+          res.send({
+            result: "success",
+            err: "",
+            data: rows[0],
+          });
+        }
+      });
+    }
+  });
+});
+
 // all books with authors query
 const allBooksWithAuthorsQuery = "";
 
@@ -124,8 +158,6 @@ app.get("/search", (req, res) => {
     withPagination = searchQuery + ` LIMIT ${pageSize} OFFSET ${(page - 1) * pageSize} `;
   }
 
-  console.log("With{agination", withPagination);
-  console.log("Searh query", searchQuery);
   mysql_pool.getConnection(function (err, connection) {
     if (err) {
       console.error("CONNECTION error: ", err);
@@ -327,6 +359,40 @@ app.get("/periods", (req, res) => {
   });
 });
 
+// popular periods query
+const popularPeriodsQuery =
+  "select distinct(p.period_name), bp.total_points from book b join (select book_id, sum(points) as total_points from user_book group by user_book.book_id) bp on bp.book_id = b.book_id join period p on b.period_id = p.period_id order by bp.total_points DESC limit 5";
+app.get("/popularPeriods", (req, res) => {
+  mysql_pool.getConnection(function (err, connection) {
+    if (err) {
+      console.error("CONNECTION error: ", err);
+      res.statusCode = 503;
+      res.send({
+        result: "error",
+        err: err.code,
+      });
+    } else {
+      connection.query(popularPeriodsQuery, function (err, rows) {
+        connection.release();
+        if (err) {
+          console.error(err);
+          res.statusCode = 503;
+          res.send({
+            result: "error",
+            err: err.code,
+          });
+        } else {
+          res.send({
+            result: "success",
+            err: "",
+            data: rows,
+          });
+        }
+      });
+    }
+  });
+});
+
 // all saved books query
 const allSavedBooksQuery = "SELECT savedbooks_id FROM savedBooks WHERE user_id = " + 1; // change user_id
 app.get("/savedbooks", (req, res) => {
@@ -429,7 +495,8 @@ app.get("/highestratedbooks", (req, res) => {
 
 // highest rated authors
 const highestRatedAuthorsQuery =
-  "select * from author a join (select author_name, sum(points) as total_points from user_book group by author_name) ap on ap.author_id = a.author_id join author_book ab on ab.author_id = a.author_id join book b on b.book_id = ab.book_id join period p on p.period_id = b.period_id join (select p.period_id, max(total_points) as total_points from author a join (select author_id, sum(points) as total_points from user_book group by author_id) ap on ap.author_id = a.author_id join author_book ab on ab.author_id = a.author_id join book b on b.book_id = ab.book_id join period p on p.period_id = b.period_id group by p.period_id) mt on mt.period_id = b.period_id";
+  "select a.author_name, bp.total_points from book b join (select book_id, sum(points) as total_points from user_book group by book_id) bp on bp.book_id = b.book_id join author_book ab on ab.book_id = b.book_id join author a on a.author_id = ab.author_id order by bp.total_points DESC limit 5";
+
 app.get("/highestratedauthors", (req, res) => {
   mysql_pool.getConnection(function (err, connection) {
     if (err) {

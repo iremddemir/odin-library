@@ -15,10 +15,10 @@ const Appbar = () => {
       <div onClick={() => navigate("/")} className={styles.logoContainer}>
         <Logo className={styles.logo} />
       </div>
-      <p onClick={() => navigate("/books/")}>Books</p>
+      {/* <p onClick={() => navigate("/books/")}>Books</p>
       <p onClick={() => navigate("/authors/")}>Authors</p>
       <p onClick={() => navigate("/books?saved=true/")}>Saved Books</p>
-      <p onClick={() => navigate("/profile/")}>Profile</p>
+      <p onClick={() => navigate("/profile/")}>Profile</p> */}
     </div>
   );
 };

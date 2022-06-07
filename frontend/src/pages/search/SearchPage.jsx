@@ -314,13 +314,16 @@ const Pagination = ({ page, setPage, totalPages, pageSize, setPageSize }) => {
 };
 
 const SearchResults = ({ results }) => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   return (
     <section className={styles.resultsSection}>
       {results.length > 0 ? (
         results.map((result) => (
-          <div className={styles.resultCard} onClick={() => navigate(`/books/${result.book_id}`)}>
+          <div
+            className={styles.resultCard}
+            // onClick={() => navigate(`/books/${result.book_id}`)}
+          >
             <img className={styles.image} src={result.image} alt={result.name} />
             <div className={styles.info}>
               <div className={styles.name}>{result.book_name}</div>

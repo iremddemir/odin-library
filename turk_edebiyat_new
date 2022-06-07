@@ -83,16 +83,16 @@ VALUES (1, "Harname", "","", "https://cdn.bkmkitap.com/harname-11542674-49-O.jpg
     (48, "Sinekli Bakkal", "","", "","", "", 4),
     (49, "Daga Cikan Kurt", "","", "","", "", 4),
     (50, "Yaprak Dokumu", "","", "","", "", 4),
-    (51, "Yesil Gece", "","", "","", "", 4),
-    (52, "Acimak", "","", "","", "", 4),
-    (53, "Anadolu Notlari", "","", "","", "", 4),
-    (54, "Efruz", "","", "","", "", 4),
-    (55, "Keşanli Ali Destani", "","", "","", "", 4),
-    (56, "Huzur", "","", "","", "", 5),
-    (57, "Saatleri Ayarlama Enstitusu", "","", "","", "", 5),
-    (58, "Tutunamayanlar", "","", "","", "", 5),
-    (59, "Yeni Yalan Zamanlar", "","", "","", "", 5),
-    (60, "Anayurt Oteli", "","", "","", "", 5)
+    (51, "Yesil Gece", "","", "","", "Türkçe", 4),
+    (52, "Acimak", "","", "","", "Türkçe", 4),
+    (53, "Anadolu Notlari", "","", "","", "Türkçe", 4),
+    (54, "Efruz", "","", "","", "Türkçe", 4),
+    (55, "Keşanli Ali Destani", "","", "","", "Türkçe", 4),
+    (56, "Huzur", "","", "","", "Türkçe", 5),
+    (57, "Saatleri Ayarlama Enstitusu", "","", "","", "Türkçe", 5),
+    (58, "Tutunamayanlar", "","", "","", "Türkçe", 5),
+    (59, "Yeni Yalan Zamanlar", "","", "","", "Türkçe", 5),
+    (60, "Anayurt Oteli", "","", "","", "Türkçe", 5)
     ;
 -- update 
 insert into book (book_id, book_name, description, summary, image, kind_genre, language, period_id)

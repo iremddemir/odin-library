@@ -24,8 +24,11 @@ const SearchPage = () => {
     order: "asc",
   });
   const [searchIn, setSearchIn] = useState("all");
-  const [searchType, setSearchType] = useState("exact");
+  const [searchType, setSearchType] = useState("fuzzy");
   const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [totalPages, setTotalPages] = useState(10);
 
   const fetchQuery = async () => {
     setLoading(true);
@@ -34,7 +37,9 @@ const SearchPage = () => {
         sort.order
       }&searchIn=${searchIn}&searchType=${searchType}&period=${filters.period.map((period) => period.value).join(",")}&kind=${filters.kind
         .map((kind) => `'${kind.value}'`)
-        .join(",")}&language=${filters.language.map((language) => language.value).join(",")}&hasSummary=${filters.hasSummary}`
+        .join(",")}&language=${filters.language.map((language) => language.value).join(",")}&hasSummary=${
+        filters.hasSummary
+      }&page=${page}&pageSize=${pageSize}`
     );
     response = await response.json();
 
@@ -45,6 +50,7 @@ const SearchPage = () => {
     }
 
     setSearchResults(response.data);
+    setTotalPages(Math.ceil(response.totalCount / pageSize));
     setLoading(false);
   };
 
@@ -57,11 +63,12 @@ const SearchPage = () => {
   useEffect(() => {
     fetchQuery();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [page, pageSize]);
 
   useEffect(() => {
-    console.log(filters);
-  }, [filters]);
+    setPage(1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [search, searchIn, searchType, sort.by, sort.order, filters.period, filters.kind, filters.language, filters.hasSummary, pageSize]);
 
   return (
     <div className={styles.searchPage}>
@@ -77,7 +84,14 @@ const SearchPage = () => {
           searchType={searchType}
           setSearchType={setSearchType}
         />
-        {loading ? "Loading..." : <SearchResults results={searchResults} />}
+        {loading ? (
+          "Loading..."
+        ) : (
+          <>
+            <Pagination page={page} setPage={setPage} pageSize={pageSize} setPageSize={setPageSize} totalPages={totalPages} />
+            <SearchResults results={searchResults} />
+          </>
+        )}
       </div>
     </div>
   );
@@ -88,6 +102,7 @@ export default SearchPage;
 const Filters = ({ filters, setFilters, sort, setSort }) => {
   const [periods, setPeriods] = useState([]);
   const [kinds, setKinds] = useState([]);
+  const [languages, setLanguages] = useState([]);
 
   // Fetch filter options
   useEffect(() => {
@@ -113,6 +128,19 @@ const Filters = ({ filters, setFilters, sort, setSort }) => {
       }
 
       setKinds(kindsResponse.data.map((kind) => ({ value: kind.kind_genre, label: kind.kind_genre })));
+
+      // Fetch languages
+      let languagesResponse = await fetch(`http://localhost:4000/languages`);
+      languagesResponse = await languagesResponse.json();
+
+      if (languagesResponse.error) {
+        setLanguages([]);
+        return;
+      }
+
+      setLanguages(
+        languagesResponse.data.filter((l) => l.language !== "").map((language) => ({ value: language.language, label: language.language }))
+      );
     };
 
     fetchFilters();
@@ -182,11 +210,7 @@ const Filters = ({ filters, setFilters, sort, setSort }) => {
           Filter by language:{" "}
         </label>
         <Multiselect
-          options={[
-            { label: "Name", value: "name" },
-            { label: "Author", value: "author" },
-            { label: "Period", value: "period" },
-          ]}
+          options={languages}
           onSelect={(values) => setFilters({ ...filters, filters: values })}
           displayValue="label"
           placeholder="Select language"
@@ -255,6 +279,40 @@ const SearchSection = ({ search, setSearch, handleSearchSubmit, searchIn, setSea
   );
 };
 
+const Pagination = ({ page, setPage, totalPages, pageSize, setPageSize }) => {
+  const handlePageChange = (e) => {
+    setPage(e.target.value);
+  };
+
+  const handlePageSizeChange = (e) => {
+    setPageSize(e.target.value);
+  };
+
+  return (
+    <section className={styles.pagination}>
+      <div className={styles.paginationOptions}>
+        <label className={styles.paginationLabel}>
+          <b>Page</b>
+        </label>
+        <select id="page" onChange={(e) => handlePageChange(e)} value={page}>
+          {[...Array(totalPages).keys()].map((i) => (
+            <option key={i + 1} value={i + 1}>
+              {i + 1}
+            </option>
+          ))}
+        </select>
+        <span> of </span>
+        <select id="pageSize" onChange={(e) => handlePageSizeChange(e)} value={pageSize}>
+          <option value="10">10</option>
+          <option value="25">25</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+        </select>
+      </div>
+    </section>
+  );
+};
+
 const SearchResults = ({ results }) => {
   const navigate = useNavigate();
 
@@ -266,7 +324,7 @@ const SearchResults = ({ results }) => {
             <img className={styles.image} src={result.image} alt={result.name} />
             <div className={styles.info}>
               <div className={styles.name}>{result.book_name}</div>
-              <div className={styles.author}>{result.author}</div>
+              <div className={styles.author}>{result.author_name}</div>
               <div className={styles.description}>{result.description}</div>
             </div>
           </div>

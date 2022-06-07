@@ -94,13 +94,13 @@ app.get("/search", (req, res) => {
   // Filter by language
   // TO-DO
   const languages = req.query.language;
-  if (languages){
-    searchQuery += 'AND book.language IN  (${languages}) ';
+  if (languages) {
+    searchQuery += `AND book.language IN  (${languages}) `;
   }
 
   // Filter by hasSummary
   const hasSummary = req.query.hasSummary;
-  console.log(hasSummary);
+
   if (hasSummary === "yes") {
     searchQuery += `AND book.summary!='' AND book.summary IS NOT NULL `;
   } else if (hasSummary === "no") {
@@ -115,8 +115,17 @@ app.get("/search", (req, res) => {
     searchQuery += " ORDER BY " + sortBy + " " + sortOrder;
   }
 
-  console.log(searchQuery);
+  // Pagination
+  const page = req.query.page;
+  const pageSize = req.query.pageSize;
 
+  let withPagination = "";
+  if (page && pageSize) {
+    withPagination = searchQuery + ` LIMIT ${pageSize} OFFSET ${(page - 1) * pageSize} `;
+  }
+
+  console.log("With{agination", withPagination);
+  console.log("Searh query", searchQuery);
   mysql_pool.getConnection(function (err, connection) {
     if (err) {
       console.error("CONNECTION error: ", err);
@@ -128,20 +137,26 @@ app.get("/search", (req, res) => {
     } else {
       connection.query(searchQuery, function (err, rows) {
         connection.release();
-        if (err) {
-          console.error(err);
-          res.statusCode = 503;
-          res.send({
-            result: "error",
-            err: err.code,
-          });
-        } else {
-          res.send({
-            result: "success",
-            err: "",
-            data: rows,
-          });
-        }
+
+        const totalCount = rows.length;
+
+        connection.query(withPagination, function (err, rows) {
+          if (err) {
+            console.error(err);
+            res.statusCode = 503;
+            res.send({
+              result: "error",
+              err: err.code,
+            });
+          } else {
+            res.send({
+              result: "success",
+              err: "",
+              data: rows,
+              totalCount: totalCount,
+            });
+          }
+        });
       });
     }
   });
@@ -378,9 +393,9 @@ app.get("/averagebookrate", (req, res) => {
   });
 });
 
-// highest rated books by period
+// highest rated books
 const highestRatedBooksQuery =
-  "select b.book_name, a.author_name, p.period_name, mt.total_points from book b join (select book_id, sum(points) as total_points from user_book group by book_id) bp on bp.book_id = b.book_id join author_book ab on ab.book_id = b.book_id join author a on ab.author_id = a.author_id join period p on p.period_id = b.period_id join (select p.period_id, max(total_points) as total_points from book b join (select book_id, sum(points) as total_points from user_book group by book_id) bp on bp.book_id = b.book_id join author_book ab on ab.book_id = b.book_id join author a on ab.author_id = a.author_id join period p on p.period_id = b.period_id group by p.period_id) mt on mt.period_id = b.period_id";
+  "select * from book b join (select book_id, sum(points) as total_points from user_book group by book_id) bp on bp.book_id = b.book_id join author_book ab on ab.book_id = b.book_id join author a on ab.author_id = a.author_id join period p on p.period_id = b.period_id join (select p.period_id, max(total_points) as total_points from book b join (select book_id, sum(points) as total_points from user_book group by book_id) bp on bp.book_id = b.book_id join author_book ab on ab.book_id = b.book_id join author a on ab.author_id = a.author_id join period p on p.period_id = b.period_id group by p.period_id) mt on mt.period_id = b.period_id";
 app.get("/highestratedbooks", (req, res) => {
   mysql_pool.getConnection(function (err, connection) {
     if (err) {
@@ -392,6 +407,40 @@ app.get("/highestratedbooks", (req, res) => {
       });
     } else {
       connection.query(highestRatedBooksQuery, function (err, rows) {
+        connection.release();
+        if (err) {
+          console.error(err);
+          res.statusCode = 503;
+          res.send({
+            result: "error",
+            err: err.code,
+          });
+        } else {
+          res.send({
+            result: "success",
+            err: "",
+            data: rows,
+          });
+        }
+      });
+    }
+  });
+});
+
+// highest rated authors
+const highestRatedAuthorsQuery =
+  "select * from author a join (select author_name, sum(points) as total_points from user_book group by author_name) ap on ap.author_id = a.author_id join author_book ab on ab.author_id = a.author_id join book b on b.book_id = ab.book_id join period p on p.period_id = b.period_id join (select p.period_id, max(total_points) as total_points from author a join (select author_id, sum(points) as total_points from user_book group by author_id) ap on ap.author_id = a.author_id join author_book ab on ab.author_id = a.author_id join book b on b.book_id = ab.book_id join period p on p.period_id = b.period_id group by p.period_id) mt on mt.period_id = b.period_id";
+app.get("/highestratedauthors", (req, res) => {
+  mysql_pool.getConnection(function (err, connection) {
+    if (err) {
+      console.error("CONNECTION error: ", err);
+      res.statusCode = 503;
+      res.send({
+        result: "error",
+        err: err.code,
+      });
+    } else {
+      connection.query(highestRatedAuthorsQuery, function (err, rows) {
         connection.release();
         if (err) {
           console.error(err);

@@ -11,9 +11,10 @@
 
         display: grid;
         grid-template-columns: 300px 1fr;
-        grid-template-rows: 100px 1fr;
+        grid-template-rows: 100px 40px 1fr;
         grid-template-areas:
             "filter search"
+            "filter pagination"
             "filter results";
         gap: 0 1rem;
 
@@ -136,6 +137,18 @@
                         font-size: 1.5rem;
                         font-weight: bold;
                         color: #333;
+                        margin-bottom: 1rem;
+                    }
+
+                    .author {
+                        font-size: 1.1rem;
+                        color: #666;
+                        margin-bottom: 1rem;
+                    }
+
+                    .description {
+                        font-size: 1.1rem;
+                        color: #666;
                         margin-bottom: 1rem;
                     }
                 }

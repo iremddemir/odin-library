@@ -20,4 +20,16 @@
             cursor: pointer;
         }
     }
+
+    .logoContainer {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+
+        .logo {
+            height: 100%;
+            width: 150px;
+        }
+    }
 }

@@ -15,7 +15,7 @@ group by book_id) bp on bp.book_id = b.book_id
 join author_book ab on ab.book_id = b.book_id
 join author a on ab.author_id = a.author_id
 join period p on p.period_id = b.period_id
-group by p.period_id) mt on mt.total_points = bp.total_points;
+group by p.period_id) mt on mt.period_id = b.period_id;
 
 -- 2) authors that wrote in more than one period
 select a.*

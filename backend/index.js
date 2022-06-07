@@ -12,7 +12,7 @@ var mysql_pool = mysql.createPool({
   connectionLimit: 100,
   host: "localhost",
   user: "root",
-  password: "root",
+  password: "password",
   database: "odinlib",
   socketPath: "/tmp/mysql.sock",
 });
@@ -302,6 +302,41 @@ app.get("/highestratedbooks", (req, res) => {
       });
     } else {
       connection.query(highestRatedBooksQuery, function (err, rows) {
+        connection.release();
+        if (err) {
+          console.error(err);
+          res.statusCode = 503;
+          res.send({
+            result: "error",
+            err: err.code,
+          });
+        } else {
+          res.send({
+            result: "success",
+            err: "",
+            data: rows,
+          });
+        }
+      });
+    }
+  });
+});
+
+// fuzzy search books by name info query
+
+app.get("/fuzzysearchbytitle", (req, res) => {
+  const fuzzySearchByTitleQuery = "SELECT ban.book_name, ban.description, ban.author_name, abr.average_bookRating from (SELECT AVG(user_book.points) AS average_bookRating, user_book.book_id FROM user_book group by user_book.book_id)abr right join (SELECT author.author_name, baid.book_name, baid.description, baid.book_id from author join (SELECT book.book_name, book.description, author_book.author_id, book.book_id from book join author_book on book.book_id = author_book.book_id) baid on author.author_id = baid.author_id) ban on ban.book_id = abr.book_id where ban.book_name like '%" + req.query.search + "%'";
+  console.log(fuzzySearchByTitleQuery);
+  mysql_pool.getConnection(function (err, connection) {
+    if (err) {
+      console.error("CONNECTION error: ", err);
+      res.statusCode = 503;
+      res.send({
+        result: "error",
+        err: err.code,
+      });
+    } else {
+      connection.query(fuzzySearchByTitleQuery, function (err, rows) {
         connection.release();
         if (err) {
           console.error(err);

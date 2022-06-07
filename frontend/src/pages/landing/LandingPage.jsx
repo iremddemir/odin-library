@@ -90,9 +90,9 @@ const LandingPage = () => {
         "Loading..."
       ) : (
         <>
-          <Periods title="Most Loved Periods" seeAllLink="/books?saved=true/" data={popularPeriods} baseLink="/periods" />
-          <Authors title="Popular Authors" seeAllLink="/authors?save=true/" data={popularAuthors} baseLink="/authors" />
           <Books title="Popular Books" seeAllLink="/books?popular=true/" data={popularBooks} baseLink="/books" />
+          <Authors title="Best Seller Authors" seeAllLink="/authors?save=true/" data={popularAuthors} baseLink="/authors" />
+          <Periods title="Most Loved Periods" seeAllLink="/books?saved=true/" data={popularPeriods} baseLink="/periods" />
         </>
       )}
       <div className={styles.footer} />
@@ -177,7 +177,7 @@ const Authors = ({ title, seeAllLink, data, baseLink }) => {
             key={index}
             // onClick={() => navigate(`${baseLink}/${item.id}/`)}
           >
-            {item.image && <img className={styles.image} src={item.image} alt={item.title} />}
+            {item.image_link && <img className={styles.image} src={item.image_link} alt={item.title} />}
             <p className={styles.name}>{item.author_name}</p>
           </div>
         ))}

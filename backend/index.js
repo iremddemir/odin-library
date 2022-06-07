@@ -361,7 +361,7 @@ app.get("/periods", (req, res) => {
 
 // popular periods query
 const popularPeriodsQuery =
-  "select distinct(p.period_name), bp.total_points from book b join (select book_id, sum(points) as total_points from user_book group by user_book.book_id) bp on bp.book_id = b.book_id join period p on b.period_id = p.period_id order by bp.total_points DESC limit 5";
+  "select distinct (pf.period_name) from (select distinct(p.period_name), bp.total_points from book b join (select book_id, sum(points) as total_points from user_book group by user_book.book_id) bp on bp.book_id = b.book_id join period p on b.period_id = p.period_id order by bp.total_points DESC) pf limit 5";
 app.get("/popularPeriods", (req, res) => {
   mysql_pool.getConnection(function (err, connection) {
     if (err) {
@@ -495,7 +495,7 @@ app.get("/highestratedbooks", (req, res) => {
 
 // highest rated authors
 const highestRatedAuthorsQuery =
-  "select a.author_name, bp.total_points from book b join (select book_id, sum(points) as total_points from user_book group by book_id) bp on bp.book_id = b.book_id join author_book ab on ab.book_id = b.book_id join author a on a.author_id = ab.author_id order by bp.total_points DESC limit 5";
+  "select distinct(ap.author_name), ap.image_link from (select distinct(a.author_name), bp.total_points, a.image_link from book b join (select book_id, sum(points) as total_points from user_book group by book_id) bp on bp.book_id = b.book_id join author_book ab on ab.book_id = b.book_id join author a on a.author_id = ab.author_id order by bp.total_points DESC) ap limit 5";
 
 app.get("/highestratedauthors", (req, res) => {
   mysql_pool.getConnection(function (err, connection) {

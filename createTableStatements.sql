@@ -1,6 +1,6 @@
 CREATE TABLE book
 (
-	book_id INT,
+    book_id INT,
     book_name VARCHAR(100),
     description VARCHAR(500),
     summary VARCHAR(500),
@@ -17,6 +17,7 @@ CREATE TABLE author
 	author_id INT,
     author_name VARCHAR(100),
 	information VARCHAR(500),
+    image_link VARCHAR(500),
     PRIMARY KEY (author_id)
     
 );

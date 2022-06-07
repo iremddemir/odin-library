@@ -61,6 +61,7 @@ app.get("/search", (req, res) => {
   let searchQuery =
     "SELECT *, book.description  FROM book, author_book, author, period WHERE book.book_id = author_book.book_id AND author.author_id = author_book.author_id AND period.period_id = book.period_id ";
 
+  // Search Type
   const isExact = req.query.searchType === "exact";
 
   // Search by
@@ -76,6 +77,30 @@ app.get("/search", (req, res) => {
     searchQuery += isExact
       ? `AND (book.book_name='${req.query.keyword}' OR author.author_name='${req.query.keyword}' OR book.description='${req.query.keyword}') `
       : `AND (book.book_name LIKE '%${req.query.keyword}%' OR author.author_name LIKE '%${req.query.keyword}%' OR book.description LIKE '%${req.query.keyword}%') `;
+  }
+
+  // Filter by period
+  const periods = req.query.period;
+  if (periods) {
+    searchQuery += `AND period.period_id IN (${periods}) `;
+  }
+
+  // Filter by kind/genre
+  const kinds = req.query.kind;
+  if (kinds) {
+    searchQuery += `AND book.kind_genre IN (${kinds}) `;
+  }
+
+  // Filter by language
+  // TO-DO
+
+  // Filter by hasSummary
+  const hasSummary = req.query.hasSummary;
+  console.log(hasSummary);
+  if (hasSummary === "yes") {
+    searchQuery += `AND book.summary!='' AND book.summary IS NOT NULL `;
+  } else if (hasSummary === "no") {
+    searchQuery += `AND (book.summary='' OR book.summary IS NULL) `;
   }
 
   // Sort

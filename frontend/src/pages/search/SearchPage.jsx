@@ -13,7 +13,12 @@ const SearchPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState(searchParams.get("s"));
   const [searchResults, setSearchResults] = useState([]);
-  const [filters, setFilters] = useState({});
+  const [filters, setFilters] = useState({
+    period: [],
+    kind: [],
+    language: [],
+    hasSummary: "all",
+  });
   const [sort, setSort] = useState({
     by: "none",
     order: "asc",
@@ -25,7 +30,11 @@ const SearchPage = () => {
   const fetchQuery = async () => {
     setLoading(true);
     let response = await fetch(
-      `http://localhost:4000/search?keyword=${search}&sortBy=${sort.by}&sortOrder=${sort.order}&searchIn=${searchIn}&searchType=${searchType}`
+      `http://localhost:4000/search?keyword=${search}&sortBy=${sort.by}&sortOrder=${
+        sort.order
+      }&searchIn=${searchIn}&searchType=${searchType}&period=${filters.period.map((period) => period.value).join(",")}&kind=${filters.kind
+        .map((kind) => `'${kind.value}'`)
+        .join(",")}&language=${filters.language.map((language) => language.value).join(",")}&hasSummary=${filters.hasSummary}`
     );
     response = await response.json();
 
@@ -49,6 +58,10 @@ const SearchPage = () => {
     fetchQuery();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    console.log(filters);
+  }, [filters]);
 
   return (
     <div className={styles.searchPage}>
@@ -138,7 +151,9 @@ const Filters = ({ filters, setFilters, sort, setSort }) => {
         </label>
         <Multiselect
           options={periods}
-          onSelect={(values) => setFilters({ ...filters, filters: values })}
+          selectedValues={filters.period}
+          onSelect={(values) => setFilters({ ...filters, period: values })}
+          onRemove={(values) => setFilters({ ...filters, period: values })}
           displayValue="label"
           placeholder="Select period"
           showCheckbox={true}
@@ -152,7 +167,9 @@ const Filters = ({ filters, setFilters, sort, setSort }) => {
         </label>
         <Multiselect
           options={kinds}
-          onSelect={(values) => setFilters({ ...filters, filters: values })}
+          selectedValues={filters.kind}
+          onSelect={(values) => setFilters({ ...filters, kind: values })}
+          onRemove={(values) => setFilters({ ...filters, kind: values })}
           displayValue="label"
           placeholder="Select kind/genre"
           showCheckbox={true}
@@ -184,8 +201,8 @@ const Filters = ({ filters, setFilters, sort, setSort }) => {
         </label>
         <select id="hasSummary" onChange={(e) => setFilters({ ...filters, hasSummary: e.target.value })}>
           <option value="all">All</option>
-          <option value="true">Yes</option>
-          <option value="false">No</option>
+          <option value="yes">Yes</option>
+          <option value="no">No</option>
         </select>
       </div>
     </section>

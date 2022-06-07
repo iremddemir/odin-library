@@ -15,8 +15,10 @@ VALUES (101, "The Ice Dragon","The Ice Dragon is a children's fantasy novelette 
 (104, "The Hitchhiker's Guide to the Galaxy","It is a comedy science fiction franchise created by Douglas Adams.","","https://upload.wikimedia.org/wikipedia/en/b/bd/H2G2_UK_front_cover.jpg","Novel", "English",7),
 (105, "So Long, and Thanks for All the Fish","","","https://upload.wikimedia.org/wikipedia/en/c/cf/SoLongAndThanksForAllTheFish.jpg","Novel","English",7),
 (106, "The Da Vinci Code","It is a 2003 mystery thriller novel","","https://upload.wikimedia.org/wikipedia/en/6/6b/DaVinciCode.jpg","Novel","English",7),
-(107, "Harry Potter and the Philosopher's Stone","The first novel in the Harry Potter series","","https://upload.wikimedia.org/wikipedia/en/6/6b/Harry_Potter_and_the_Philosopher%27s_Stone_Book_Cover.jpg","Young adult fiction","English",7),
+(107, "Harry Potter and the Philosopher's Stone","The first novel in the Harry Potter series","","https://upload.wikimedia.org/wikipedia/en/6/6b/Harry_Potter_and_the_Philosopher%27s_Stone_Book_Cover.jpg","Young adult fiction","English",7)
     ;
+
+
 -- BOOK_AUTHOR
 insert into author_book(book_id, author_id)
 VALUES (101,103),(102,103),(103,103),
@@ -26,7 +28,7 @@ VALUES (101,103),(102,103),(103,103),
 
 -- PERİOD
 insert into period (period_id, period_name, description)
-VALUES  (7, "Popular English Lit.");
+VALUES  (7, "Popular English Lit.", "");
 
 -- SAVEDBOOKS
 insert into user_book (book_id, user_id, date, points, comment)
@@ -50,10 +52,5 @@ VALUES(101,2, now(), 5, "good"),
 (106,1, now(), 1, "basarisiz"),
 (107,2, now(), 2, "uzun"),
 (107,3, now(), 4, "guzel"),
-(107,1, now(), 1, "basarisiz"),
+(107,1, now(), 1, "basarisiz")
 ;
-
--- USER
-insert into user (user_id, user_name)
-VALUES (1, "idemir"), (2, "aozaslan"), (3, "oserifogullari");
--- 

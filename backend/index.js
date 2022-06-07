@@ -93,6 +93,10 @@ app.get("/search", (req, res) => {
 
   // Filter by language
   // TO-DO
+  const languagea = req.query.language;
+  if (languages){
+    searchQuery += 'AND book.language IN  (${languages}) ';
+  }
 
   // Filter by hasSummary
   const hasSummary = req.query.hasSummary;
@@ -222,6 +226,39 @@ app.get("/genres", (req, res) => {
       });
     } else {
       connection.query(allGenresQuery, function (err, rows) {
+        connection.release();
+        if (err) {
+          console.error(err);
+          res.statusCode = 503;
+          res.send({
+            result: "error",
+            err: err.code,
+          });
+        } else {
+          res.send({
+            result: "success",
+            err: "",
+            data: rows,
+          });
+        }
+      });
+    }
+  });
+});
+
+// all languages query
+const allLanguagesQuery = "SELECT DISTINCT language FROM book";
+app.get("/languages", (req, res) => {
+  mysql_pool.getConnection(function (err, connection) {
+    if (err) {
+      console.error("CONNECTION error: ", err);
+      res.statusCode = 503;
+      res.send({
+        result: "error",
+        err: err.code,
+      });
+    } else {
+      connection.query(allLanguagesQuery, function (err, rows) {
         connection.release();
         if (err) {
           console.error(err);

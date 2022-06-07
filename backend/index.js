@@ -93,7 +93,7 @@ app.get("/search", (req, res) => {
 
   // Filter by language
   // TO-DO
-  const languagea = req.query.language;
+  const languages = req.query.language;
   if (languages){
     searchQuery += 'AND book.language IN  (${languages}) ';
   }

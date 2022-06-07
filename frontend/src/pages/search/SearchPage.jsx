@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 // Components
@@ -12,6 +12,7 @@ const SearchPage = () => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState(searchParams.get("s"));
+  const [loading, setLoading] = useState(false);
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
@@ -22,6 +23,20 @@ const SearchPage = () => {
       })
       .catch((error) => console.error("Error:", error));
   };
+
+  useEffect(() => {
+    const fetchQuery = async () => {
+      setLoading(true);
+      const response = await fetch(
+        `http://localhost:4000/search?search=${search}`
+      );
+      const data = await response.json();
+      console.log(data);
+      setLoading(false);
+    };
+
+    fetchQuery();
+  }, [search]);
 
   return (
     <div className={styles.searchPage}>

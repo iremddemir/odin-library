@@ -19,11 +19,14 @@ const SearchPage = () => {
     order: "asc",
   });
   const [searchIn, setSearchIn] = useState("all");
+  const [searchType, setSearchType] = useState("exact");
   const [loading, setLoading] = useState(false);
 
   const fetchQuery = async () => {
     setLoading(true);
-    let response = await fetch(`http://localhost:4000/search?keyword=${search}&sortBy=${sort.by}&sortOrder=${sort.order}&searchIn=${searchIn}`);
+    let response = await fetch(
+      `http://localhost:4000/search?keyword=${search}&sortBy=${sort.by}&sortOrder=${sort.order}&searchIn=${searchIn}&searchType=${searchType}`
+    );
     response = await response.json();
 
     if (response.error) {
@@ -52,7 +55,15 @@ const SearchPage = () => {
       <Appbar />
       <div className={styles.content}>
         <Filters filters={filters} setFilters={setFilters} sort={sort} setSort={setSort} />
-        <SearchSection search={search} setSearch={setSearch} handleSearchSubmit={handleSearchSubmit} searchIn={searchIn} setSearchIn={setSearchIn} />
+        <SearchSection
+          search={search}
+          setSearch={setSearch}
+          handleSearchSubmit={handleSearchSubmit}
+          searchIn={searchIn}
+          setSearchIn={setSearchIn}
+          searchType={searchType}
+          setSearchType={setSearchType}
+        />
         {loading ? "Loading..." : <SearchResults results={searchResults} />}
       </div>
     </div>
@@ -181,9 +192,7 @@ const Filters = ({ filters, setFilters, sort, setSort }) => {
   );
 };
 
-const SearchSection = ({ search, setSearch, handleSearchSubmit, searchIn, setSearchIn }) => {
-  const [searchType, setSearchType] = useState("exact");
-
+const SearchSection = ({ search, setSearch, handleSearchSubmit, searchIn, setSearchIn, searchType, setSearchType }) => {
   const handleSearchTypeChange = (e) => {
     setSearchType(e.target.value);
   };

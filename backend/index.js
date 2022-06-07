@@ -12,7 +12,7 @@ var mysql_pool = mysql.createPool({
   connectionLimit: 100,
   host: "localhost",
   user: "root",
-  password: "password",
+  password: "root",
   database: "odinlib",
   socketPath: "/tmp/mysql.sock",
 });
@@ -61,26 +61,21 @@ app.get("/search", (req, res) => {
   let searchQuery =
     "SELECT *, book.description  FROM book, author_book, author, period WHERE book.book_id = author_book.book_id AND author.author_id = author_book.author_id AND period.period_id = book.period_id ";
 
+  const isExact = req.query.searchType === "exact";
+
   // Search by
   const searchIn = req.query.searchIn;
-  console.log(searchIn);
+
   if (searchIn === "name") {
-    searchQuery += "AND book.book_name LIKE '%" + req.query.keyword + "%' ";
+    searchQuery += isExact ? `AND book.book_name='${req.query.keyword}' ` : `AND book.book_name LIKE '%${req.query.keyword}%' `;
   } else if (searchIn === "author") {
-    searchQuery += "AND author.author_name LIKE  '%" + req.query.keyword + "%' ";
+    searchQuery += isExact ? `AND author.author_name='${req.query.keyword}' ` : `AND author.author_name LIKE  '% ${req.query.keyword} "%' `;
   } else if (searchIn === "description") {
-    searchQuery += "AND book.description LIKE '%" + req.query.keyword + "%' ";
+    searchQuery += isExact ? `AND book.description='${req.query.keyword}' ` : `AND book.description LIKE '% ${req.query.keyword}%' `;
   } else {
-    searchQuery +=
-      "AND (book.book_name LIKE '%" +
-      req.query.keyword +
-      "%' " +
-      "OR author.author_name LIKE  '%" +
-      req.query.keyword +
-      "%' " +
-      "OR book.description LIKE '%" +
-      req.query.keyword +
-      "%') ";
+    searchQuery += isExact
+      ? `AND (book.book_name='${req.query.keyword}' OR author.author_name='${req.query.keyword}' OR book.description='${req.query.keyword}') `
+      : `AND (book.book_name LIKE '%${req.query.keyword}%' OR author.author_name LIKE '%${req.query.keyword}%' OR book.description LIKE '%${req.query.keyword}%') `;
   }
 
   // Sort
@@ -358,7 +353,10 @@ app.get("/highestratedbooks", (req, res) => {
 // fuzzy search books by name info query
 
 app.get("/fuzzysearchbytitle", (req, res) => {
-  const fuzzySearchByTitleQuery = "SELECT ban.book_name, ban.description, ban.author_name, abr.average_bookRating from (SELECT AVG(user_book.points) AS average_bookRating, user_book.book_id FROM user_book group by user_book.book_id)abr right join (SELECT author.author_name, baid.book_name, baid.description, baid.book_id from author join (SELECT book.book_name, book.description, author_book.author_id, book.book_id from book join author_book on book.book_id = author_book.book_id) baid on author.author_id = baid.author_id) ban on ban.book_id = abr.book_id where ban.book_name like '%" + req.query.search + "%'";
+  const fuzzySearchByTitleQuery =
+    "SELECT ban.book_name, ban.description, ban.author_name, abr.average_bookRating from (SELECT AVG(user_book.points) AS average_bookRating, user_book.book_id FROM user_book group by user_book.book_id)abr right join (SELECT author.author_name, baid.book_name, baid.description, baid.book_id from author join (SELECT book.book_name, book.description, author_book.author_id, book.book_id from book join author_book on book.book_id = author_book.book_id) baid on author.author_id = baid.author_id) ban on ban.book_id = abr.book_id where ban.book_name like '%" +
+    req.query.search +
+    "%'";
   console.log(fuzzySearchByTitleQuery);
   mysql_pool.getConnection(function (err, connection) {
     if (err) {

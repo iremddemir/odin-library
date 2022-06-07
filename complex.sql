@@ -67,14 +67,15 @@ order by bp.total_points DESC
 limit 5;
 
 -- 7) most pop periods
-
-select distinct(p.name),
+select distinct(pf.period_name) from
+(
+select distinct(p.period_name), bp.total_points
 from book b 
 join (select book_id, sum(points) as total_points
 from user_book
 group by book_id) bp on bp.book_id = b.book_id
 join period p on b.period_id = p.period_id
-order by bp.total_points DESC
+order by bp.total_points DESC) pf
 limit 5;
 
 
